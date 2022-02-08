@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future<SiteList> fetchSites() async {
+Future<List<Site>> fetchSites() async {
   final response = await http.get(
       Uri.parse('https://afl-api-dev.uda.xomsvcs.com/api/Sites/'),
       headers: {
@@ -12,13 +12,16 @@ Future<SiteList> fetchSites() async {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Access-Control-Allow-Origin, Accept",
         "Authorization":
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1yNS1BVWliZkJpaTdOZDFqQmViYXhib1hXMCIsImtpZCI6Ik1yNS1BVWliZkJpaTdOZDFqQmViYXhib1hXMCJ9.eyJhdWQiOiJmY2NhN2NiNS03M2Q5LTQxMmItYmIwNS0zMWM4ZTNjZGYxYTEiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9kMWVlMWFjZC1iYzdhLTRiYzQtYTc4Ny05MzhjNDlhODM5MDYvIiwiaWF0IjoxNjQ0Mjc0MDI0LCJuYmYiOjE2NDQyNzQwMjQsImV4cCI6MTY0NDI3NzkyNCwiYWlvIjoiQVNRQTIvOFRBQUFBZlluY0FQUW8wWnljekJzQWxsMEZadDlycStkdm5Rc1NKS1JzczhHajdZYz0iLCJhbXIiOlsid2lhIl0sImZhbWlseV9uYW1lIjoiSGVtbWF0aSIsImdpdmVuX25hbWUiOiJBc2hrYW4iLCJpbl9jb3JwIjoidHJ1ZSIsImlwYWRkciI6IjEzNi4yMjguMjUxLjUwIiwibmFtZSI6IkhlbW1hdGksIEFzaGthbiIsIm5vbmNlIjoiNGExZmM0N2UtMzJhMS00NTViLWJiMTMtM2QxMjNkMGFiMmM2Iiwib2lkIjoiZDA1ZTFhOTEtOGU3MC00MWJhLTg4YWEtZTNlNmVkZTI4MDE2Iiwib25wcmVtX3NpZCI6IlMtMS01LTIxLTE0MTcwMDEzMzMtMzQzODE4Mzk4LTE4MDE2NzQ1MzEtMTQ2ODUxNyIsInJoIjoiMC5BUklBelJydTBYcTh4RXVuaDVPTVNhZzVCclY4eXZ6WmN5dEJ1d1V4eU9QTjhhRVNBTGMuIiwicm9sZXMiOlsiQUZMQWRtaW4iXSwic3ViIjoiNjlnc0piY1lHMHJNRnB0TXFVSkhnUGlDLWo5V3ZpYnZ1SWJVbHpqT3F5WSIsInRpZCI6ImQxZWUxYWNkLWJjN2EtNGJjNC1hNzg3LTkzOGM0OWE4MzkwNiIsInVuaXF1ZV9uYW1lIjoiYXNoa2FuLmhlbW1hdGlAZXh4b25tb2JpbC5jb20iLCJ1cG4iOiJhc2hrYW4uaGVtbWF0aUBleHhvbm1vYmlsLmNvbSIsInV0aSI6Ik40ZUhyeTdwUTAtVTZJYjdaQ3NlQVEiLCJ2ZXIiOiIxLjAifQ.fQL8wGQherm4GQQyh2N84rAGwvQwgDw84BpH4omxKVPG8XfxAOmaMQy1xSkY2Ms4OvaPv4ADbZ8rxjlEVzjQqMZZE1nMRAZVtAXC9ZwBuxi71mcQvvZRfoBv50iFQ8FeYNu3CbsjM6FHqGXMoyY6wbgBs8ssTKvegF0nWjRtBXCXD0LKsPNL0syYOKtWnrOIovg7BRQ6j_juMkjrGZzC18DVJTnMBv6OQXbeQfju88lFh9D-ipCIR_7cXfLEgcyNSoUyuex53bPwa4-V13HZ43Ep1qE24v6Xdx7svxQ8Zdb-FchQf6OGC1hxn027oxhuEMXRE2xX8hMHJadmG8JHfQ"
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1yNS1BVWliZkJpaTdOZDFqQmViYXhib1hXMCIsImtpZCI6Ik1yNS1BVWliZkJpaTdOZDFqQmViYXhib1hXMCJ9.eyJhdWQiOiJmY2NhN2NiNS03M2Q5LTQxMmItYmIwNS0zMWM4ZTNjZGYxYTEiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9kMWVlMWFjZC1iYzdhLTRiYzQtYTc4Ny05MzhjNDlhODM5MDYvIiwiaWF0IjoxNjQ0MzQxOTk1LCJuYmYiOjE2NDQzNDE5OTUsImV4cCI6MTY0NDM0NTg5NSwiYWlvIjoiRTJaZ1lPalczQ0J4VmN3NWEwNzB3VzYzRmExTEhuY2NkQzZkZk1IWlNTajE0Y1dsenRzQiIsImFtciI6WyJ3aWEiXSwiZmFtaWx5X25hbWUiOiJIZW1tYXRpIiwiZ2l2ZW5fbmFtZSI6IkFzaGthbiIsImluX2NvcnAiOiJ0cnVlIiwiaXBhZGRyIjoiMTM2LjIyOC4yNTEuNDEiLCJuYW1lIjoiSGVtbWF0aSwgQXNoa2FuIiwibm9uY2UiOiI0M2JjMDBlNC03MTA5LTQyMzYtODRjZC1kNjdmYzNlMmU2ZWMiLCJvaWQiOiJkMDVlMWE5MS04ZTcwLTQxYmEtODhhYS1lM2U2ZWRlMjgwMTYiLCJvbnByZW1fc2lkIjoiUy0xLTUtMjEtMTQxNzAwMTMzMy0zNDM4MTgzOTgtMTgwMTY3NDUzMS0xNDY4NTE3IiwicmgiOiIwLkFSSUF6UnJ1MFhxOHhFdW5oNU9NU2FnNUJyVjh5dnpaY3l0QnV3VXh5T1BOOGFFU0FMYy4iLCJyb2xlcyI6WyJBRkxBZG1pbiJdLCJzdWIiOiI2OWdzSmJjWUcwck1GcHRNcVVKSGdQaUMtajlXdmlidnVJYlVsempPcXlZIiwidGlkIjoiZDFlZTFhY2QtYmM3YS00YmM0LWE3ODctOTM4YzQ5YTgzOTA2IiwidW5pcXVlX25hbWUiOiJhc2hrYW4uaGVtbWF0aUBleHhvbm1vYmlsLmNvbSIsInVwbiI6ImFzaGthbi5oZW1tYXRpQGV4eG9ubW9iaWwuY29tIiwidXRpIjoiS0Ftc05LVU52RU96SVFVRGRwOENBUSIsInZlciI6IjEuMCJ9.hw2OdGdvvUSTiMqZ-fJyZgfonhplWUtRWaDIZyYwBdThoX9vDYw4fM5QheBqeFz9B8_QqyPmRhEQYQ2LOxePi2z-xNNNo7RUjgKLdrRR99Kr1v4t1GQ2h1yxlrzANWHgbhEMpEmBfRu8GxV0pYdqn_D0rBbxH9CSoA4C1NA6ezcTxPuSJfx9RqPtyXzz8xrkVPKc4qlgKdeICHFm9LOpcNfVxc41lXeXMvqXqkDm0-mg0yvygjMRUNlC83xcaTXbtVMhpcM3RXC66tio_2HNsRZkHBIh6HjHMT7YfLPM7E6SbZWlFA7BCgMaEDMZOdgn0VIconFtncxmJiJMbcAZUg"
       });
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
-    return SiteList.fromJson(response.body);
+    Iterable list = json.decode(response.body);
+    var sitesList = list.map((model) => Site.fromJson(model)).toList();
+
+    return sitesList;
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
@@ -26,82 +29,58 @@ Future<SiteList> fetchSites() async {
   }
 }
 
-class SiteList {
-  List<Site> sites;
-
-  SiteList() {
-    sites = [];
-  }
-
-  factory SiteList.fromJson(String json) {
-    final parsed = jsonDecode(json).cast<Map<String, dynamic>>();
-    SiteList results = new SiteList();
-
-    parsed.forEach((element) {
-      results.sites.add(element);
-    });
-
-    return results;
-  }
-}
-
 class Site {
   final int id;
   final String name;
 
-  const Site({
-    this.id,
-    this.name,
-  });
+  Site.fromJson(Map json)
+      : id = json['id'],
+        name = json['name'];
+
+  Map toJson() {
+    return {'id': id, 'name': name};
+  }
 }
 
-void main() => runApp(const MyApp());
+void main() => runApp(const DemoFlutterApp());
 
-class MyApp extends StatefulWidget {
-  const MyApp() : super();
+class DemoFlutterApp extends StatefulWidget {
+  const DemoFlutterApp() : super();
 
   @override
-  _MyAppState createState() => _MyAppState();
+  _DemoFlutterAppState createState() => _DemoFlutterAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  Future<SiteList> sites;
+class _DemoFlutterAppState extends State<DemoFlutterApp> {
+  List<Site> sites;
+  List<Widget> sitesWidget = [];
 
   @override
   void initState() {
     super.initState();
-    sites = fetchSites();
+    fetchSitesAsync();
+  }
+
+  void fetchSitesAsync() async {
+    fetchSites().then((value) => setState(
+          () {
+            sites = value;
+            sitesWidget = sites.map((item) => new Text(item.name)).toList();
+          },
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Fetch Data Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Fetch Data Example'),
+        title: 'AFL - Flutter Demo App',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
         ),
-        body: Center(
-          child: FutureBuilder<SiteList>(
-            future: sites,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                snapshot.data.sites.forEach((element) {
-                  return Text(element.name);
-                });
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              }
-
-              // By default, show a loading spinner.
-              return const CircularProgressIndicator();
-            },
-          ),
-        ),
-      ),
-    );
+        home: Scaffold(
+            appBar: AppBar(
+              title: const Text('AFL - Flutter Demo App'),
+            ),
+            body: Row(children: sitesWidget)));
   }
 }
