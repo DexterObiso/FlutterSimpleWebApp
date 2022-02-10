@@ -1,21 +1,129 @@
 class WellSummaryModel {
-  final int id;
-  final String site_name;
-  final String pad_name;
-  final String well_name;
+  final int? id;
+  final int? siteId;
+  final int? padId;
+  final int? wellId;
+  final String? site_Name;
+  final String? pad_Name;
+  final String? well_Name;
+  final String? date;
+  final int? recommendation;
+  final String? description;
+  final String? recommendationDate;
+  final double? uplift;
+  final double? number_Alarms;
+  final int? priority;
+  final String? validation;
+  final double? water_Cut;
+  final double? oil_Volume;
+  final double? water_Volume;
+  final String? cycle_Number;
+  final String? well_Head_Status;
+  final String? shut_In_Code;
+  final String? motor_Status;
+  final String? well_Head_Temperature;
+  final String? casing_Press;
+  final String? vent_Status;
+  final String? bean_Size;
+  final String? strokes_Per_Minute;
+  final String? test_Quality;
+  final String? steam_Injection_Flow_Rate;
+  final double? production_Hours;
+  final String? production_Days;
+  final double? test_Water_Volume;
+  final double? test_Oil_Volume;
+  final String? well_Test_Date;
+  final String? well_Test_Type;
+  final double? steam_Volume;
+  final double? pump_Efficiency;
+  final bool pressureSwitchIsChecked;
+  final String? pressureSwitchIsCheckedLastUpdatedBy;
+  final String? pressureSwitchIsCheckedLastUpdatedDate;
+  final dynamic operatorFeedback;
+  final dynamic wellComments;
+  final double? production_Hours_Rounded;
+  final double? production_Days_Rounded;
+  final double? test_Fluid_Rounded;
+  final double? test_Oil_Volume_Rounded;
+  final double? test_Water_Volume_Rounded;
+  final double? steam_Volume_Rounded;
+  final double? pump_Efficiency_Rounded;
+  final double? oil_Volume_Rounded;
+  final double? strokes_Per_Minute_Rounded;
+  final double? casing_Press_Rounded;
+  final double? shut_In_Code_Rounded;
+  final double? well_Head_Temperature_Rounded;
+  final double? steam_Injection_Flow_Rate_Rounded;
+  final String? test_Quality_Description;
+  final String? motor_Status_Description;
+  final String? vent_Status_Description;
+  final String? well_Head_Status_Description;
+  final double? cycle_Number_Rounded;
+  final bool isPad;
 
   WellSummaryModel.fromJson(Map json)
       : id = json['id'],
-        site_name = json['site_name'],
-        pad_name = json['pad_name'],
-        well_name = json['well_name'];
-
-  Map toJson() {
-    return {
-      'id': id,
-      'site_name': site_name,
-      'pad_name': pad_name,
-      'well_name': well_name
-    };
-  }
+        siteId = json['siteId'],
+        padId = json['padId'],
+        wellId = json['wellId'],
+        site_Name = json['site_Name'],
+        pad_Name = json['pad_Name'],
+        well_Name = json['well_Name'],
+        date = json['date'],
+        recommendation = json['recommendation'],
+        description = json['description'],
+        recommendationDate = json['recommendationDate'],
+        uplift = json['uplift'],
+        number_Alarms = json['number_Alarms'],
+        priority = json['priority'],
+        validation = json['validation'],
+        water_Cut = json['water_Cut'],
+        oil_Volume = json['oil_Volume'],
+        water_Volume = json['water_Volume'],
+        cycle_Number = json['cycle_Number'],
+        well_Head_Status = json['well_Head_Status'],
+        shut_In_Code = json['shut_In_Code'],
+        motor_Status = json['motor_Status'],
+        well_Head_Temperature = json['well_Head_Temperature'],
+        casing_Press = json['casing_Press'],
+        vent_Status = json['vent_Status'],
+        bean_Size = json['bean_Size'],
+        strokes_Per_Minute = json['strokes_Per_Minute'],
+        test_Quality = json['test_Quality'],
+        steam_Injection_Flow_Rate = json['steam_Injection_Flow_Rate'],
+        production_Hours = json['production_Hours'],
+        production_Days = json['production_Days'],
+        test_Water_Volume = json['test_Water_Volume'],
+        test_Oil_Volume = json['test_Oil_Volume'],
+        well_Test_Date = json['well_Test_Date'],
+        well_Test_Type = json['well_Test_Type'],
+        steam_Volume = json['steam_Volume'],
+        pump_Efficiency = json['pump_Efficiency'],
+        pressureSwitchIsChecked = json['pressureSwitchIsChecked'],
+        pressureSwitchIsCheckedLastUpdatedBy =
+            json['pressureSwitchIsCheckedLastUpdatedBy'],
+        pressureSwitchIsCheckedLastUpdatedDate =
+            json['pressureSwitchIsCheckedLastUpdatedDate'],
+        operatorFeedback = json['operatorFeedback'],
+        wellComments = json['wellComments'],
+        production_Hours_Rounded = json['production_Hours_Rounded'],
+        production_Days_Rounded = json['production_Days_Rounded'],
+        test_Fluid_Rounded = json['test_Fluid_Rounded'],
+        test_Oil_Volume_Rounded = json['test_Oil_Volume_Rounded'],
+        test_Water_Volume_Rounded = json['test_Water_Volume_Rounded'],
+        steam_Volume_Rounded = json['steam_Volume_Rounded'],
+        pump_Efficiency_Rounded = json['pump_Efficiency_Rounded'],
+        oil_Volume_Rounded = json['oil_Volume_Rounded'],
+        strokes_Per_Minute_Rounded = json['strokes_Per_Minute_Rounded'],
+        casing_Press_Rounded = json['casing_Press_Rounded'],
+        shut_In_Code_Rounded = json['shut_In_Code_Rounded'],
+        well_Head_Temperature_Rounded = json['well_Head_Temperature_Rounded'],
+        steam_Injection_Flow_Rate_Rounded =
+            json['steam_Injection_Flow_Rate_Rounded'],
+        test_Quality_Description = json['test_Quality_Description'],
+        motor_Status_Description = json['motor_Status_Description'],
+        vent_Status_Description = json['vent_Status_Description'],
+        well_Head_Status_Description = json['well_Head_Status_Description'],
+        cycle_Number_Rounded = json['cycle_Number_Rounded'],
+        isPad = json['isPad'];
 }
