@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
-import '../Model/SiteModel.dart';
+import 'package:flutter_simple_web_app/globalConfig.dart';
+
+import '../Model/PadModel.dart';
 
 import 'package:http/http.dart' as http;
 
-import '../globalConfig.dart';
-
-Future<List<SiteModel>> fetchSites() async {
+Future<List<PadModel>> fetchPads(int siteId) async {
   final response = await http.get(
-      Uri.parse('https://afl-api-dev.uda.xomsvcs.com/api/Sites/'),
+      Uri.parse('https://afl-api-dev.uda.xomsvcs.com/api/Pads/Site/' +
+          siteId.toString()),
       headers: {
         "Accept": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -20,12 +21,12 @@ Future<List<SiteModel>> fetchSites() async {
     // If the server did return a 200 OK response,
     // then parse the JSON.
     Iterable list = json.decode(response.body);
-    var sitesList = list.map((model) => SiteModel.fromJson(model)).toList();
+    var padsList = list.map((model) => PadModel.fromJson(model)).toList();
 
-    return sitesList;
+    return padsList;
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
-    throw Exception('Failed to load sites');
+    throw Exception('Failed to load pads');
   }
 }
