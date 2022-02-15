@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_web_app/Services/PadAPI.dart';
 import 'package:flutter_simple_web_app/Services/SiteAPI.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import '../Model/PadModel.dart';
 import '../Model/SiteModel.dart';
 import 'WellSummaries.dart';
+import 'PadSummaries.dart';
 
 class MyNavigationBar extends StatefulWidget {
   MyNavigationBar() : super();
 
   @override
-  State<MyNavigationBar> createState() => _MyNavigationBarState();
+  State<MyNavigationBar> createState() => MyNavigationBarState();
 }
 
-class _MyNavigationBarState extends State<MyNavigationBar> {
+class MyNavigationBarState extends State<MyNavigationBar> {
+  GlobalKey<WellSummariesState> _myWellSummaryKey = GlobalKey();
+  GlobalKey<PadSummariesState> _myPadSummaryKey = GlobalKey();
   int selectedIndex = 0;
+  late List<Widget> navigationOptions;
   List<SiteModel> allSites = [];
   List<PadModel> allPads = [];
-  List<String> padOptions = ['select a pad'];
   List<String> siteOptions = ['select a site'];
-  String selectedPad = 'select a pad';
+  List<PadModel?> selectedPads = [];
   String selectedSite = 'select a site';
-  GlobalKey<WellSummariesState> _myKey = GlobalKey();
-  late List<Widget> navigationOptions;
+  DateTime selectedDate = DateTime.now();
+  DateTime currentDate = DateTime.now();
 
   @override
   void initState() {
@@ -29,12 +33,21 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
     fetchSiteAsync();
 
     navigationOptions = <Widget>[
-      WellSummaries(key: _myKey),
-      Text(
-        'Pad Summary',
-        style: optionStyle,
-      ),
+      WellSummaries(key: _myWellSummaryKey),
+      PadSummaries(key: _myPadSummaryKey),
     ];
+  }
+
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: currentDate,
+        firstDate: DateTime(2019),
+        lastDate: currentDate);
+    if (pickedDate != null && pickedDate != selectedDate)
+      setState(() {
+        selectedDate = pickedDate;
+      });
   }
 
   void fetchSiteAsync() async {
@@ -66,32 +79,27 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
           allSites.where((element) => element.name == selected).toList();
 
       if (site.length > 0) {
-        padOptions = ['select a pad'];
-
         fetchPads(site[0].id).then((value) => setState(() {
               allPads = value;
-
-              value.forEach((element) {
-                padOptions.add(element.name);
-              });
             }));
       }
     }
   }
 
-  void onPadChange(String selected) {
-    setState(() {
-      selectedPad = selected;
-    });
-  }
-
   void onSearch() {
-    if (selectedPad != 'select a pad') {
-      List<PadModel> pad =
-          allPads.where((element) => element.name == selectedPad).toList();
+    if (selectedPads.isNotEmpty) {
+      List<PadModel> pads = allPads
+          .where((element) =>
+              selectedPads.where((x) => x?.name == element.name).length > 0)
+          .toList();
 
-      if (pad.length > 0) {
-        _myKey.currentState?.setSelectedPadId(pad[0].id);
+      if (pads.length > 0) {
+        List<int> padIds = pads.map((x) => x.id).toList();
+
+        _myWellSummaryKey.currentState
+            ?.setSelectedFilterParams(padIds, selectedDate);
+        _myPadSummaryKey.currentState
+            ?.setSelectedFilterParams(padIds, selectedDate);
       }
     }
   }
@@ -103,64 +111,83 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
         title: const Text(' AFL - Flutter Demo App'),
       ),
       body: Container(
-        child: Column(children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DropdownButton(
-                value: selectedSite,
-                onChanged: (newSiteValue) {
-                  onSiteChange(newSiteValue.toString());
-                },
-                items: siteOptions.map((site) {
-                  return DropdownMenuItem(
-                    child: new Text(site),
-                    value: site,
-                  );
-                }).toList(),
-              ),
               const SizedBox(
                 height: 20,
               ),
-              DropdownButton(
-                value: selectedPad,
-                onChanged:
-                    selectedSite.isEmpty || selectedSite == 'select a site'
+              Wrap(
+                children: [
+                  Container(
+                      width: 160,
+                      height: 60,
+                      child: DropdownButton(
+                        value: selectedSite,
+                        onChanged: (newSiteValue) {
+                          onSiteChange(newSiteValue.toString());
+                        },
+                        items: siteOptions.map((site) {
+                          return DropdownMenuItem(
+                            child: new Text(site),
+                            value: site,
+                          );
+                        }).toList(),
+                      )),
+                  Container(
+                      width: 200,
+                      child: IgnorePointer(
+                          ignoring: selectedSite.isEmpty ||
+                              selectedSite == 'select a site',
+                          child: MultiSelectDialogField(
+                            buttonIcon: Icon(Icons.arrow_drop_down),
+                            items: allPads
+                                .map((e) => MultiSelectItem(e, e.name))
+                                .toList(),
+                            listType: MultiSelectListType.CHIP,
+                            initialValue: selectedPads,
+                            onConfirm: (values) {
+                              setState(() {
+                                selectedPads = values.toList().cast();
+                              });
+                            },
+                          ))),
+                  TextButton(
+                      onPressed: () => selectDate(context),
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                                text: selectedDate.toString().split(' ')[0],
+                                style: TextStyle(color: Colors.black)),
+                            WidgetSpan(
+                              child: Icon(Icons.arrow_drop_down,
+                                  color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      )),
+                  TextButton(
+                    style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blue)),
+                    onPressed: selectedSite.isEmpty
                         ? null
-                        : (newPadValue) {
-                            onPadChange(newPadValue.toString());
+                        : () {
+                            onSearch();
                           },
-                items: padOptions.map((pad) {
-                  return DropdownMenuItem(
-                    child: new Text(pad),
-                    value: pad,
-                  );
-                }).toList(),
+                    child: Text('Search'),
+                  )
+                ],
               ),
               const SizedBox(
                 height: 20,
               ),
-              TextButton(
-                style: ButtonStyle(
-                  foregroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
-                ),
-                onPressed: selectedSite.isEmpty || selectedPad == 'select a pad'
-                    ? null
-                    : () {
-                        onSearch();
-                      },
-                child: Text('Search'),
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Expanded(child: navigationOptions.elementAt(selectedIndex))
-        ]),
+              Expanded(child: navigationOptions.elementAt(selectedIndex))
+            ]),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -169,7 +196,7 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
             label: 'Well Summary',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.view_sidebar_rounded),
+            icon: Icon(Icons.view_module_sharp),
             label: 'Pad Summary',
           ),
         ],

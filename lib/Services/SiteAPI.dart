@@ -7,14 +7,14 @@ import 'package:http/http.dart' as http;
 import '../globalConfig.dart';
 
 Future<List<SiteModel>> fetchSites() async {
-  final response = await http.get(
-      Uri.parse('https://afl-api-dev.uda.xomsvcs.com/api/Sites/'),
-      headers: {
-        "Accept": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Access-Control-Allow-Origin, Accept",
-        "Authorization": "Bearer " + auth_token
-      });
+  String url = apiURL + 'Sites/';
+
+  final response = await http.get(Uri.parse(url), headers: {
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Access-Control-Allow-Origin, Accept",
+    "Authorization": "Bearer " + authToken
+  });
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
