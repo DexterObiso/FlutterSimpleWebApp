@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Widgets/MyNavigationBar.dart';
+import 'Widgets/AFL.dart';
 
 void main() => runApp(const MyApp());
 
@@ -9,7 +9,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyNavigationBar(),
+      home: AFL(),
     );
   }
+
+  //   @override
+  // Widget build(BuildContext context) {
+  //   return MaterialApp(initialRoute: '/AFL', routes: {
+  //     '/AFL': (context) => const AFL(),
+  //   });
+  // }
 }

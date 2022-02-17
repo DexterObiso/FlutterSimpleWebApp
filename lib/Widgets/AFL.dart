@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_aad_oauth/flutter_aad_oauth.dart';
+import 'package:flutter_aad_oauth/model/config.dart';
 import 'package:flutter_simple_web_app/Services/PadAPI.dart';
 import 'package:flutter_simple_web_app/Services/SiteAPI.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import '../Model/PadModel.dart';
 import '../Model/SiteModel.dart';
+import '../globalConfig.dart';
 import 'WellSummaries.dart';
 import 'PadSummaries.dart';
 
-class MyNavigationBar extends StatefulWidget {
-  MyNavigationBar() : super();
+class AFL extends StatefulWidget {
+  const AFL() : super();
 
   @override
-  State<MyNavigationBar> createState() => MyNavigationBarState();
+  State<AFL> createState() => AFLState();
 }
 
-class MyNavigationBarState extends State<MyNavigationBar> {
+class AFLState extends State<AFL> {
   GlobalKey<WellSummariesState> _myWellSummaryKey = GlobalKey();
   GlobalKey<PadSummariesState> _myPadSummaryKey = GlobalKey();
   int selectedIndex = 0;
@@ -26,9 +29,22 @@ class MyNavigationBarState extends State<MyNavigationBar> {
   String selectedSite = 'select a site';
   DateTime selectedDate = DateTime.now();
   DateTime currentDate = DateTime.now();
+  // late Config config;
+  // late FlutterAadOauth oauth;
 
   @override
   void initState() {
+    // config = new Config(
+    //     azureTennantId: tenant,
+    //     clientId: clientId,
+    //     scope: "openid profile email offline_access user.read",
+    //     redirectUri: "http://localhost:3000",
+    //     responseType: "id_token+token");
+
+    // oauth = FlutterAadOauth(config);
+    // oauth.setContext(context);
+    // login();
+
     super.initState();
     fetchSiteAsync();
 
@@ -37,6 +53,15 @@ class MyNavigationBarState extends State<MyNavigationBar> {
       PadSummaries(key: _myPadSummaryKey),
     ];
   }
+
+  // void login() async {
+  //   try {
+  //     await oauth.login();
+  //     String? accessToken = await oauth.getAccessToken();
+  //   } catch (e) {
+  //     debugPrint(e.toString());
+  //   }
+  // }
 
   Future<void> selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -108,7 +133,7 @@ class MyNavigationBarState extends State<MyNavigationBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(' AFL - Flutter Demo App'),
+        title: const Text('AFL - Flutter Demo App'),
       ),
       body: Container(
         child: Column(
@@ -141,6 +166,7 @@ class MyNavigationBarState extends State<MyNavigationBar> {
                           ignoring: selectedSite.isEmpty ||
                               selectedSite == 'select a site',
                           child: MultiSelectDialogField(
+                            buttonText: Text('select a pad'),
                             buttonIcon: Icon(Icons.arrow_drop_down),
                             items: allPads
                                 .map((e) => MultiSelectItem(e, e.name))
@@ -180,7 +206,7 @@ class MyNavigationBarState extends State<MyNavigationBar> {
                             onSearch();
                           },
                     child: Text('Search'),
-                  )
+                  ),
                 ],
               ),
               const SizedBox(

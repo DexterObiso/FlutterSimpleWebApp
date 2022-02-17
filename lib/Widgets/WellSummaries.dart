@@ -14,6 +14,7 @@ class WellSummariesState extends State<WellSummaries> {
   List<WellSummaryModel> wellSummaries = [];
   List<Card> wellSummaryCards = [];
   DateTime selectedDate = DateTime.now();
+  List<int> hiddenPadIds = [];
 
   @override
   void initState() {
@@ -68,7 +69,7 @@ class WellSummariesState extends State<WellSummaries> {
                                   item.well_Name.toString() != '00')
                                 Text('WELL: ' + item.well_Name.toString(),
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 13,
                                       fontWeight: FontWeight.bold,
                                     )),
                             ],
